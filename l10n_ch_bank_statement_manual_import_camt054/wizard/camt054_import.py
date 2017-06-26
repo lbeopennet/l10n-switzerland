@@ -24,10 +24,10 @@ class Camt054ImportWizard(models.TransientModel):
         if not statement_id:
             raise ValueError('The id of current satement is not in statement')
 
-        wiz = self.env['account.bank.statement.import']
+        parser = self.env['account.bank.statement.import.camt.parser']
         statement_line_obj = self.env['account.bank.statement.line']
 
-        stmts_vals = wiz._get_camt_parser().parse(base64.b64decode(self.camt054file))[2]
+        stmts_vals = parser.parse(base64.b64decode(self.camt054file))[2]
         lines_vals = stmts_vals[0]['transactions']
 
         for l in lines_vals:
