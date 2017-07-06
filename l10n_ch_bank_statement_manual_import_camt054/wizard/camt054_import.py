@@ -28,7 +28,9 @@ class Camt054ImportWizard(models.TransientModel):
         statement_line_obj = self.env['account.bank.statement.line']
 
         stmts_vals = parser.parse(base64.b64decode(self.camt054file))[2]
-        lines_vals = stmts_vals[0]['transactions']
+        lines_vals = []
+        for stmt_vals in stmts_vals:
+            lines_vals.extend(stmt_vals['transactions'])
 
         for l in lines_vals:
             self._match_ref(l)
