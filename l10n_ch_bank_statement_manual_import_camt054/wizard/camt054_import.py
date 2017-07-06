@@ -37,6 +37,16 @@ class Camt054ImportWizard(models.TransientModel):
             l['statement_id'] = statement_id
             statement_line_obj.create(l)
 
+        if stmts_vals:
+            bal_vals = {}
+            balance_start = stmts_vals[0]['balance_start']
+            if balance_start:
+                bal_vals['balance_start'] = balance_start
+            balance_end_real = stmts_vals[-1]['balance_end_real']
+            if balance_end_real:
+                bal_vals['balance_end_real'] = balance_end_real
+            self.env['account.bank.statement'].browse(statement_id).write(bal_vals)
+
         self.env['ir.attachment'].create(
             {
                 'name': 'Camt.054 %s' % time.strftime(
