@@ -109,7 +109,7 @@ class FdsFilesImportToBankStatementsWizard(models.TransientModel):
                 fds_files_ids = self._download_file(sftp, dir, tmp_d, fds_id)
 
             # import to bank statements
-            self._import2bankStatements(fds_files_ids)
+            self.msg_file_imported = '\n'.join(fds_files_ids.mapped('filename'))
             self.state = 'done'
         except Exception:
             self.env.cr.rollback()
@@ -189,19 +189,6 @@ class FdsFilesImportToBankStatementsWizard(models.TransientModel):
                 fds_files_ids += fds_files_ids.create(values)
 
         return fds_files_ids
-
-    @api.multi
-    def _import2bankStatements(self, fds_files_ids):
-        ''' private function that import the files to bank statments
-
-            :param recordset: of model fds_postfinance_file
-            :returns None:
-        '''
-        for fds_file in fds_files_ids:
-            if fds_file.import2bankStatements():
-                self.msg_file_imported += fds_file.filename + "; "
-            else:
-                self.msg_import_file_fail += fds_file.filename + "; "
 
     @api.multi
     def _get_sftp_config(self):
