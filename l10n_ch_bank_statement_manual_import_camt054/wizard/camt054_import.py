@@ -7,12 +7,12 @@ import time
 from openerp.tools.translate import _
 from openerp import models, fields, exceptions, api
 
+
 class Camt054ImportWizard(models.TransientModel):
 
     _name = 'camt054.import.wizard'
 
     camt054file = fields.Binary('Camt.054 File')
-
 
     @api.multi
     def import_camt054(self):
@@ -45,7 +45,8 @@ class Camt054ImportWizard(models.TransientModel):
             balance_end_real = stmts_vals[-1]['balance_end_real']
             if balance_end_real:
                 bal_vals['balance_end_real'] = balance_end_real
-            self.env['account.bank.statement'].browse(statement_id).write(bal_vals)
+            stmt = self.env['account.bank.statement'].browse(statement_id)
+            stmt.write(bal_vals)
 
         self.env['ir.attachment'].create(
             {
