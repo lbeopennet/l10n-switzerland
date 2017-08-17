@@ -79,9 +79,9 @@ class Camt054ImportWizard(models.TransientModel):
             order='date desc',
         )
         if len(line) > 1:
-            _logger.warning(
-                _("Too many receivable/payable lines for reference %s") % ref)
-            return
+            raise exceptions.UserError(
+                _("Too many receivable/payable lines for reference %s") % ref
+            )
 
         if line:
             # transaction_ref is propagated on all lines
